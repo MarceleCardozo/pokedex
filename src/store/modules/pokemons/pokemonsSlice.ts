@@ -1,14 +1,17 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import api from '../../../services';
 
-interface PokemonState {
-  id: string;
-  name: string;
+export interface PokemonsState {
+  pokemons: any;
+  loading: boolean;
 }
 
-const initialState: PokemonState[] = [];
+const initialState: PokemonsState = {
+  pokemons: [],
+  loading: false
+};
 
-export const getPokemons = createAsyncThunk('/pokemon', async () => {
+export const getPokemons = createAsyncThunk('/pokemon/getPokemons', async () => {
   const response = await api.get('/pokemon');
 
   console.log(response.data.results);
@@ -23,21 +26,18 @@ export const getPokemons = createAsyncThunk('/pokemon', async () => {
 const pokemonsSlice = createSlice({
   name: 'pokemons',
   initialState,
-  reducers: {
-    clearState: () => {
-      return initialState;
-    }
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getPokemons.pending, (state) => {
-      console.log('pending');
+      state.loading = true;
       return state;
     });
     builder.addCase(getPokemons.fulfilled, (state, action) => {
-      return action.payload;
+      state.loading = false;
+      state.pokemons = action.payload;
+      return state;
     });
   }
 });
 
-export const { clearState } = pokemonsSlice.actions;
 export default pokemonsSlice.reducer;

@@ -10,15 +10,7 @@ const Home: React.FC = () => {
     dispatch(getPokemons());
   }, []);
 
-  return (
-    <ul>
-      {pokemonsRedux.map((pokemon) => (
-        <li key={pokemon.id}>
-          <p>Name: {pokemon.name}</p>
-        </li>
-      ))}
-    </ul>
-  );
+  return <>{JSON.stringify(pokemonsRedux)}</>;
 };
 
 export default Home;
