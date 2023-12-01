@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { getPokemons, setPage } from '../store/modules/pokemons/pokemonsSlice';
 import PokemonCard from '../components/pokemonCard';
-import { Grid, Pagination } from '@mui/material';
+import { Grid, LinearProgress, Pagination } from '@mui/material';
 import NavBar from '../components/navbar';
 
 const Home: React.FC = () => {
@@ -13,9 +13,9 @@ const Home: React.FC = () => {
     dispatch(getPokemons(pokemonsRedux.page));
   }, [dispatch, pokemonsRedux.page]);
 
-  useEffect(() => {
-    console.log(pokemonsRedux);
-  }, [pokemonsRedux]);
+  if (pokemonsRedux.loading) {
+    return <LinearProgress color="secondary" />;
+  }
 
   return (
     <>

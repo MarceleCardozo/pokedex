@@ -20,8 +20,6 @@ const initialState: PokemonsState = {
 export const getPokemons = createAsyncThunk('/pokemon/getAll', async (page: number) => {
   const response = await api.get(`/pokemon?limit=20&offset=${(page - 1) * 20}`);
 
-  console.log(response.data.results, '###');
-
   const promises = response.data.results.map((pokemon: any) => {
     return axios.get(pokemon.url);
   });
@@ -30,7 +28,6 @@ export const getPokemons = createAsyncThunk('/pokemon/getAll', async (page: numb
 
   const data = result.reduce((acc, val) => {
     acc.push(val.data);
-    console.log(acc);
     return acc;
   }, []);
 
@@ -52,6 +49,10 @@ const pokemonsSlice = createSlice({
     builder.addCase(getPokemons.pending, (state) => {
       state.loading = true;
       return state;
+    });
+    builder.addCase(getPokemons.rejected, (state) => {
+      state.loading = false;
+      console.log('Erro no getPokemons');
     });
     builder.addCase(getPokemons.fulfilled, (state, action) => {
       state.loading = false;
