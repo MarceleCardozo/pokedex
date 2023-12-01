@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import { Pokemon } from '../types/pokemonType';
 import { useState } from 'react';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+import StarIcon from '@mui/icons-material/Star';
 
 const StyledCard = styled.article`
   width: 250px;
@@ -37,6 +39,11 @@ const StyledHeader = styled.div`
   border-top-right-radius: 8px;
   font-weight: bold;
   color: rgba(13, 82, 75, 0.419);
+
+  .star-icon {
+    cursor: pointer;
+    margin-left: 8px;
+  }
 `;
 
 const StyledMain = styled.div`
@@ -95,14 +102,25 @@ const StyledFooter = styled.div`
 
 export default function PokemonCard({ pokemon }: { pokemon: Pokemon }) {
   const [isFlipped, setFlipped] = useState(false);
+  const [isFavorited, setFavorited] = useState(false);
 
   const handleCardClick = () => {
     setFlipped(!isFlipped);
   };
 
+  const handleStarClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setFavorited(!isFavorited);
+  };
+
   return (
     <StyledCard onClick={handleCardClick} className={isFlipped ? 'flipped' : ''}>
-      <StyledHeader>ID: {pokemon.id}</StyledHeader>
+      <StyledHeader>
+        ID: {pokemon.id}
+        <div className="star-icon" onClick={handleStarClick}>
+          {isFavorited ? <StarIcon /> : <StarBorderIcon />}
+        </div>
+      </StyledHeader>
       {isFlipped ? (
         <StyledBack>
           <StyledStats>

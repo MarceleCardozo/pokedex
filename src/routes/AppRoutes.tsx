@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Home from '../pages/Home';
-import Details from '../pages/Details';
+import Pokedex from '../pages/Pokedex';
 
 const router = createBrowserRouter([
   {
@@ -8,8 +8,8 @@ const router = createBrowserRouter([
     element: <Home />
   },
   {
-    path: '/details',
-    element: <Details />
+    path: '/pokedex',
+    element: <Pokedex />
   }
 ]);
 
