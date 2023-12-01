@@ -1,8 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import api from '../../../services';
+import axios from 'axios';
+import { Pokemon } from '../../../types/pokemonType';
 
 export interface PokemonsState {
-  pokemons: any;
+  pokemons: Pokemon[];
   loading: boolean;
 }
 
@@ -11,16 +13,22 @@ const initialState: PokemonsState = {
   loading: false
 };
 
-export const getPokemons = createAsyncThunk('/pokemon/getPokemons', async () => {
-  const response = await api.get('/pokemon');
+export const getPokemons = createAsyncThunk('/pokemon/getAll', async () => {
+  const response = await api.get('/pokemon?limit=20&offset=0');
 
-  console.log(response.data.results);
+  console.log(response.data.results, '###');
 
-  if (response.status === 200) {
-    return response.data.results;
-  }
+  const promises = response.data.results.map((pokemon: any) => {
+    return axios.get(pokemon.url);
+  });
 
-  return [];
+  const result = await Promise.all(promises);
+
+  return result.reduce((acc, val) => {
+    acc.push(val.data);
+    console.log(acc);
+    return acc;
+  }, []);
 });
 
 const pokemonsSlice = createSlice({
@@ -35,6 +43,9 @@ const pokemonsSlice = createSlice({
     builder.addCase(getPokemons.fulfilled, (state, action) => {
       state.loading = false;
       state.pokemons = action.payload;
+
+      console.log(action.payload);
+
       return state;
     });
   }
