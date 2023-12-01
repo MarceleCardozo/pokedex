@@ -1,18 +1,17 @@
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { getPokemons } from '../store/modules/pokemons/pokemonsSlice';
+import { getPokemons, setPage } from '../store/modules/pokemons/pokemonsSlice';
 import PokemonCard from '../components/pokemonCard';
 import { Grid, Pagination } from '@mui/material';
 import NavBar from '../components/navbar';
-import BasicPagination from '../components/basicPagination';
 
 const Home: React.FC = () => {
   const pokemonsRedux = useAppSelector((state) => state.pokemons);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(getPokemons());
-  }, []);
+    dispatch(getPokemons(pokemonsRedux.page));
+  }, [dispatch, pokemonsRedux.page]);
 
   useEffect(() => {
     console.log(pokemonsRedux);
@@ -34,7 +33,12 @@ const Home: React.FC = () => {
       </Grid>
       <Grid container>
         <Grid item xs={12} display={'flex'} justifyContent={'center'} margin={'30px'}>
-          <BasicPagination />
+          <Pagination
+            color="secondary"
+            page={pokemonsRedux.page}
+            onChange={(e, v) => dispatch(setPage(v))}
+            count={pokemonsRedux.pages}
+          />
         </Grid>
       </Grid>
     </>
