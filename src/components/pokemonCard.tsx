@@ -3,6 +3,8 @@ import { Pokemon } from '../types/pokemonType';
 import { useState } from 'react';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import StarIcon from '@mui/icons-material/Star';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { toggleFavorite } from '../store/modules/pokemons/pokemonsSlice';
 
 const StyledCard = styled.article`
   width: 250px;
@@ -101,8 +103,10 @@ const StyledFooter = styled.div`
 `;
 
 export default function PokemonCard({ pokemon }: { pokemon: Pokemon }) {
+  const dispatch = useAppDispatch();
+  const isFavorited = useAppSelector((state) => state.pokemons.favoritePokemonIds.includes(pokemon.id));
+
   const [isFlipped, setFlipped] = useState(false);
-  const [isFavorited, setFavorited] = useState(false);
 
   const handleCardClick = () => {
     setFlipped(!isFlipped);
@@ -110,7 +114,7 @@ export default function PokemonCard({ pokemon }: { pokemon: Pokemon }) {
 
   const handleStarClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setFavorited(!isFavorited);
+    dispatch(toggleFavorite(pokemon.id));
   };
 
   return (

@@ -8,13 +8,17 @@ export interface PokemonsState {
   loading: boolean;
   page: number;
   pages: number;
+  favoritePokemonIds: number[];
+  pokedexPage: number;
 }
 
 const initialState: PokemonsState = {
   pokemons: [],
   loading: false,
   page: 1,
-  pages: 0
+  pages: 0,
+  favoritePokemonIds: [],
+  pokedexPage: 1
 };
 
 export const getPokemons = createAsyncThunk('/pokemon/getAll', async (page: number) => {
@@ -43,6 +47,16 @@ const pokemonsSlice = createSlice({
   reducers: {
     setPage: (state, action) => {
       state.page = action.payload;
+    },
+    toggleFavorite: (state, action) => {
+      const pokemonId = action.payload;
+      const isFavorite = state.favoritePokemonIds.includes(pokemonId);
+
+      if (isFavorite) {
+        state.favoritePokemonIds = state.favoritePokemonIds.filter((id) => id !== pokemonId);
+      } else {
+        state.favoritePokemonIds.push(pokemonId);
+      }
     }
   },
   extraReducers: (builder) => {
@@ -63,5 +77,5 @@ const pokemonsSlice = createSlice({
   }
 });
 
-export const { setPage } = pokemonsSlice.actions;
+export const { setPage, toggleFavorite } = pokemonsSlice.actions;
 export default pokemonsSlice.reducer;
