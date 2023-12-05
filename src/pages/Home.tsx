@@ -36,7 +36,7 @@ const Home: React.FC = () => {
           <Pagination
             color="secondary"
             page={pokemonsRedux.page}
-            onChange={(e, v) => dispatch(setPage(v))}
+            onChange={(_e, v) => dispatch(setPage(v))}
             count={pokemonsRedux.pages}
           />
         </Grid>
