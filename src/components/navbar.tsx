@@ -44,7 +44,10 @@ export default function NavBar() {
             variant="h6"
             noWrap
             component="div"
-            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block', marginLeft: '1%', cursor: 'pointer' } }}
+            sx={{
+              flexGrow: 1,
+              display: { xs: 'none', sm: 'block', marginLeft: '1%', cursor: 'pointer', width: '15%' }
+            }}
           >
             POKEDEX
           </Typography>
