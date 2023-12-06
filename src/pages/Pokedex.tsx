@@ -16,6 +16,7 @@ const Pokedex: React.FC = () => {
           <NavBar />
         </Grid>
       </Grid>
+
       <Grid container spacing={2} sx={{ margin: '0 auto', maxWidth: '1200px' }}>
         {favoritedPokemons.map((pokemon) => (
           <Grid item key={pokemon.id} xs={12} sm={6} md={4} lg={3}>
