@@ -1,13 +1,17 @@
-import { Grid } from '@mui/material';
+import { Grid, LinearProgress } from '@mui/material';
 import NavBar from '../components/navbar';
 import { useAppSelector } from '../store/hooks';
 import PokemonCard from '../components/pokemonCard';
 
 const Pokedex: React.FC = () => {
+  const pokemonsRedux = useAppSelector((state) => state.pokemons);
   const favoritedPokemonIds = useAppSelector((state) => state.pokemons.favoritePokemonIds);
-  const allPokemons = useAppSelector((state) => state.pokemons.pokemons);
 
-  const favoritedPokemons = allPokemons.filter((pokemon) => favoritedPokemonIds.includes(pokemon.id));
+  const favoritedPokemons = pokemonsRedux.pokemons.filter((pokemon) => favoritedPokemonIds.includes(pokemon.id));
+
+  if (pokemonsRedux.loading) {
+    return <LinearProgress color="secondary" />;
+  }
 
   return (
     <>
