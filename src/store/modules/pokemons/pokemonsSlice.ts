@@ -64,7 +64,7 @@ const pokemonsSlice = createSlice({
     },
     setFavoritePokemon: (state, action) => {
       const pokemon = action.payload;
-      const isAlreadyFavorited = state.favoritedPokemons.some((favoritePokemon) => favoritePokemon.id === pokemon.id);
+      const isAlreadyFavorited = state?.favoritedPokemons?.some((favoritePokemon) => favoritePokemon.id === pokemon.id);
 
       if (!isAlreadyFavorited) {
         state.favoritedPokemons = state.favoritedPokemons || [];
