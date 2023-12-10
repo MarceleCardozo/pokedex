@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 import { Pokemon } from '../types/pokemonType';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import StarIcon from '@mui/icons-material/Star';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { toggleFavorite } from '../store/modules/pokemons/pokemonsSlice';
+import { toggleFavorite, setFavoritePokemon, removeFavoritePokemon } from '../store/modules/pokemons/pokemonsSlice';
 
 const StyledCard = styled.article`
   width: 250px;
@@ -105,6 +105,8 @@ const StyledFooter = styled.div`
 export default function PokemonCard({ pokemon }: { pokemon: Pokemon }) {
   const dispatch = useAppDispatch();
   const isFavorited = useAppSelector((state) => state.pokemons.favoritePokemonIds.includes(pokemon.id));
+  const pokemonsRedux = useAppSelector((state) => state.pokemons);
+  const favoritedPokemons = pokemonsRedux.favoritedPokemons || [];
 
   const [isFlipped, setFlipped] = useState(false);
 
@@ -112,10 +114,20 @@ export default function PokemonCard({ pokemon }: { pokemon: Pokemon }) {
     setFlipped(!isFlipped);
   };
 
-  const handleStarClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    dispatch(toggleFavorite(pokemon.id));
-  };
+  const handleStarClick = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      const isPokemonFavorited = favoritedPokemons.some((favoritePokemon) => favoritePokemon.id === pokemon.id);
+
+      if (isPokemonFavorited) {
+        dispatch(removeFavoritePokemon(pokemon));
+      } else {
+        dispatch(setFavoritePokemon(pokemon));
+        dispatch(toggleFavorite(pokemon.id));
+      }
+    },
+    [dispatch, favoritedPokemons, pokemon]
+  );
 
   return (
     <StyledCard onClick={handleCardClick} className={isFlipped ? 'flipped' : ''}>

@@ -5,9 +5,7 @@ import PokemonCard from '../components/pokemonCard';
 
 const Pokedex: React.FC = () => {
   const pokemonsRedux = useAppSelector((state) => state.pokemons);
-  const favoritedPokemonIds = useAppSelector((state) => state.pokemons.favoritePokemonIds);
-
-  const favoritedPokemons = pokemonsRedux.pokemons.filter((pokemon) => favoritedPokemonIds.includes(pokemon.id));
+  const favoritedPokemons = pokemonsRedux.favoritedPokemons || [];
 
   if (pokemonsRedux.loading) {
     return <LinearProgress color="secondary" />;

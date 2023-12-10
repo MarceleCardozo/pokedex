@@ -10,6 +10,7 @@ export interface PokemonsState {
   pages: number;
   favoritePokemonIds: number[];
   pokedexPage: number;
+  favoritedPokemons: Pokemon[];
 }
 
 const initialState: PokemonsState = {
@@ -18,7 +19,8 @@ const initialState: PokemonsState = {
   page: 1,
   pages: 0,
   favoritePokemonIds: [],
-  pokedexPage: 1
+  pokedexPage: 1,
+  favoritedPokemons: []
 };
 
 export const getPokemons = createAsyncThunk('/pokemon/getAll', async (page: number) => {
@@ -57,25 +59,42 @@ const pokemonsSlice = createSlice({
       } else {
         state.favoritePokemonIds.push(pokemonId);
       }
+
+      return state;
+    },
+    setFavoritePokemon: (state, action) => {
+      const pokemon = action.payload;
+      const isAlreadyFavorited = state.favoritedPokemons.some((favoritePokemon) => favoritePokemon.id === pokemon.id);
+
+      if (!isAlreadyFavorited) {
+        state.favoritedPokemons = state.favoritedPokemons || [];
+        state.favoritedPokemons = [...state.favoritedPokemons, pokemon];
+      }
+
+      return state;
+    },
+
+    removeFavoritePokemon: (state, action) => {
+      const pokemonToRemove = action.payload;
+      state.favoritedPokemons = state.favoritedPokemons.filter((pokemon) => pokemon.id !== pokemonToRemove.id);
+      state.favoritePokemonIds = state.favoritePokemonIds.filter((idPokemon) => idPokemon !== pokemonToRemove.id);
+      return state;
     }
   },
   extraReducers: (builder) => {
     builder.addCase(getPokemons.pending, (state) => {
       state.loading = true;
-      return state;
     });
     builder.addCase(getPokemons.rejected, (state) => {
       state.loading = false;
-      console.log('Erro no getPokemons');
     });
     builder.addCase(getPokemons.fulfilled, (state, action) => {
       state.loading = false;
       state.pokemons = action.payload.data;
       state.pages = action.payload.pages;
-      return state;
     });
   }
 });
 
-export const { setPage, toggleFavorite } = pokemonsSlice.actions;
+export const { setPage, toggleFavorite, setFavoritePokemon, removeFavoritePokemon } = pokemonsSlice.actions;
 export default pokemonsSlice.reducer;
